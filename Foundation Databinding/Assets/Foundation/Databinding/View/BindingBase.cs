@@ -213,6 +213,7 @@ namespace Foundation.Databinding.View
 
             if (BindingProxy != null && Context == null)
                 Debug.LogError("Invalid BindingProxy. Please bind to a BindingContext or its child.");
+
         }
 
       
@@ -382,7 +383,7 @@ namespace Foundation.Databinding.View
         public BindingInfo[] GetBindingInfos()
         {
 #if UNITY_EDITOR
-            return GetType().GetFields()
+            return GetType().GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
                   .Where(o => o.FieldType == typeof(BindingInfo))
                   .Select(o => o.GetValue(this))
                   .Cast<BindingInfo>()
@@ -398,7 +399,7 @@ namespace Foundation.Databinding.View
             return _infoCache;
 #else
             if (_infoCache == null)
-                _infoCache = GetType().GetFields()
+                _infoCache = GetType().GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
                     .Where(o => o.FieldType == typeof(BindingInfo))
                     .Select(o => o.GetValue(this))
                     .Cast<BindingInfo>()
