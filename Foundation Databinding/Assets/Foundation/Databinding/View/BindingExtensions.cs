@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Foundation.Databinding.View
@@ -34,6 +36,33 @@ namespace Foundation.Databinding.View
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Gets a component that implements interface type T
+        /// </summary>
+        public static T GetInterface<T>(this GameObject gameObject) where T : class
+        {
+            if (!typeof(T).IsInterface)
+            {
+                throw new System.Exception(typeof(T).ToString() + " is not an interface");
+            }
+
+            return gameObject.GetComponents<Component>().OfType<T>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets all components that implement interface type T
+        /// </summary>
+        public static IEnumerable<T> GetInterfaces<T>(this GameObject gameObject) where T : class
+        {
+            if (!typeof(T).IsInterface)
+            {
+                Debug.LogError(typeof(T).ToString() + ": is not an actual interface!");
+                return Enumerable.Empty<T>();
+            }
+
+            return gameObject.GetComponents<Component>().OfType<T>();
         }
     }
 }

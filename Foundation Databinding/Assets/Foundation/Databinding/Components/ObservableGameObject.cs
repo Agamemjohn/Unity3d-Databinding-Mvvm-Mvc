@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Foundation.Databinding.Model;
+using Foundation.Databinding.View;
 using UnityEngine;
 #if UNITY_WSA
 using System.Runtime.CompilerServices;
@@ -36,8 +37,6 @@ namespace Foundation.Databinding.Components
         }
 
         private Dictionary<string, IObservableModel> _binderMap = new Dictionary<string, IObservableModel>();
-
-        private bool _isDisposed;
 
         private ObservableMessage _bindingMessage;
 
@@ -95,8 +94,6 @@ namespace Foundation.Databinding.Components
         [HideInInspector]
         public virtual void Dispose()
         {
-            _isDisposed = true;
-
             if (_bindingMessage != null)
             {
                 _bindingMessage.Dispose();
