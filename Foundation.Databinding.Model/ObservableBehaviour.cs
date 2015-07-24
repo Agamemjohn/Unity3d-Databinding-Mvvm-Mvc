@@ -114,12 +114,17 @@ namespace Foundation.Databinding.Model
         [HideInInspector]
         public void Command(string memberName)
         {
-            _binder.Command(memberName);
+            Binder.Command(memberName);
         }
 
         public void Command(string memberName, object paramater)
         {
-            _binder.Command(memberName, paramater);
+            if (Binder == null)
+            {
+                UnityEngine.Debug.LogError("No binder on " + name + ", memberName: " + memberName + ", parameter " + paramater);
+            }
+
+            Binder.Command(memberName, paramater);
         }
 
         [HideInInspector]
