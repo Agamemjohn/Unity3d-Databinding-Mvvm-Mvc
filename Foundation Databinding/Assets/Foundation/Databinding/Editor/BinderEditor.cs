@@ -65,15 +65,26 @@ namespace Foundation.Databinding.Editor
 
             var members = new MemberInfo[0];
 
-            // filter
-            switch (info.Filters)
+            var instance = Target.Context.DataInstance;
+
+            Foundation.Databinding.Components.ObservableGameObject obsGO = instance as Foundation.Databinding.Components.ObservableGameObject;
+
+            if(obsGO != null)
             {
-                case BindingBase.BindingFilter.Commands:
-                    members = EditorMembersHelper.GetMethods(type);
-                    break;
-                case BindingBase.BindingFilter.Properties:
-                    members = EditorMembersHelper.GetProperties(type);
-                    break;
+                members = obsGO.GetMethods();
+            }
+            else
+            {
+                // filter
+                switch (info.Filters)
+                {
+                    case BindingBase.BindingFilter.Commands:
+                        members = EditorMembersHelper.GetMethods(type);
+                        break;
+                    case BindingBase.BindingFilter.Properties:
+                        members = EditorMembersHelper.GetProperties(type);
+                        break;
+                }
             }
 
             //filter

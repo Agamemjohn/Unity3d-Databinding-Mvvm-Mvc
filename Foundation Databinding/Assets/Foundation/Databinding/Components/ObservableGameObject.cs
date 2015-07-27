@@ -5,9 +5,11 @@
 //  Published		: 2015
 //  -------------------------------------
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using Foundation.Databinding.Model;
 using Foundation.Databinding.View;
 using UnityEngine;
@@ -182,6 +184,32 @@ namespace Foundation.Databinding.Components
                 UnityEngine.Debug.LogError("Member not found ! " + memberName + " " + GetType());
                 return null;
             }
+        }
+
+		public MethodInfo[] GetMethods()
+        {
+			var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod;
+
+			List<MethodInfo> retMethods = new List<MethodInfo>();
+
+			foreach (IObservableModel model in gameObject.GetInterfaces<IObservableModel>())
+			{
+				if (model != (IObservableModel)this)
+				{
+					var ms = model.GetType().GetMethods(flags)
+						.Where(o => !o.IsSpecialName)
+						.Where(o => !o.HasAttribute<HideInInspector>())
+						.Where(o => !o.Module.Name.Contains("UnityEngine"))
+						.Where(o => o.GetParameters().Length < 2)
+						.Where(o => o.ReturnType == typeof(void) || o.ReturnType == typeof(IEnumerator))
+						.OrderBy(o => o.Name)
+						.ToArray();
+
+					retMethods.AddRange(ms);
+				}
+			}
+
+			return retMethods.ToArray();
         }
 
         public virtual void NotifyProperty(string memberName, object parameter)

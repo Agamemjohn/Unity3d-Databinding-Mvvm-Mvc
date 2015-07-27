@@ -383,7 +383,7 @@ namespace Foundation.Databinding.View
         public BindingInfo[] GetBindingInfos()
         {
 #if UNITY_EDITOR
-            return GetType().GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            return GetType().GetFields()
                   .Where(o => o.FieldType == typeof(BindingInfo))
                   .Select(o => o.GetValue(this))
                   .Cast<BindingInfo>()
@@ -399,7 +399,7 @@ namespace Foundation.Databinding.View
             return _infoCache;
 #else
             if (_infoCache == null)
-                _infoCache = GetType().GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                _infoCache = GetType().GetFields()
                     .Where(o => o.FieldType == typeof(BindingInfo))
                     .Select(o => o.GetValue(this))
                     .Cast<BindingInfo>()
